@@ -20,11 +20,6 @@ connection.connect((err) => {
 });
 
 
-
-
-const start = () => {
-
-
     // Banner for the app
     console.log(`╔═════════════════════════════════════════════════════╗
 ║                                                     ║
@@ -44,6 +39,11 @@ const start = () => {
 ║                                                     ║
 \╚═════════════════════════════════════════════════════╝
 `);
+
+
+const start = () => {
+
+
 
     inquirer
         .prompt({
@@ -93,27 +93,145 @@ const start = () => {
 };
 
 const addDepartment = () => {
-    console.log("Adding Department");
+
+    inquirer
+        .prompt({
+            type: "input",
+            message: "What deparment do you want to add?",
+            name: "department"
+        })
+        .then((answer) => {
+            const deparment = answer.department;
+            connection.query(
+                "INSERT INTO department SET ?",
+                {
+                    name: deparment,
+                },
+                (err) => {
+                    if (err) throw err;
+                    console.log("Adding Department");
+                    start();
+                }
+
+            );
+        });
 };
 
 const addRole = () => {
-    console.log("Adding a Role");
+
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "What is the job title being added?",
+                name: "title",
+            },
+            {
+                type: "input",
+                message: "What is the salary for this added position?",
+                name: "salary",
+            },
+            {
+                type: "input",
+                message: "What is the department ID for this position?",
+                name: "departmentID",
+            }
+        ])
+        .then((answer) => {
+            const title = answer.title;
+            const salary = answer.salary;
+            const departmentID = answer.departmentID;
+
+            connection.query(
+                "INSERT INTO role SET ?",
+                {
+                    title: title,
+                    salary: salary,
+                    department_id: departmentID,
+                },
+                (err) => {
+                    if (err) throw err;
+                    console.log("Adding a Role");
+                    start();
+                }
+            );
+        });
 };
 
 const addEmplyee = () => {
-    console.log("Adding Employee");
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "Waht is the employee's first name?",
+                name: "firstName",
+            },
+            {
+                type: "input",
+                message: "What is the employee's last name?",
+                name: "lastName",
+            },
+            {
+                type: "input",
+                message: "What is the employee's ID?",
+                name: "roleID",
+            },
+            {
+                type: "input",
+                message: "What is the emplyee's manger ID?",
+                name: "managerID"
+            }
+
+        ])
+        .then((answer) => {
+            const firstName = answer.firstName;
+            const lastName = answer.lastName;
+            const roleID = answer.roleID;
+            const managerID = answer.managerID;
+
+            connection.query(
+                "INSERT INTO employee SET ?",
+                {
+                    first_name: firstName,
+                    last_name: lastName,
+                    role_id: roleID,
+                    manager_id: managerID,
+                },
+                (err) => {
+                    if (err) throw err;
+                    console.log("Adding Employee");
+                    start();
+                }
+            );
+        });
+
 };
 
 const viewDepot = () => {
     console.log("Let's take a look at a Department");
+    connection.query("SELECT * FROM department", (err,data) => {
+        if (err) throw err;
+        console.table(data);
+        start();
+    })
 };
 
 const viewRole = () => {
     console.log("Let's look at the Role we have");
+    connection.query("SELECT * FROM role", (err,data) => {
+        if (err) throw err;
+        console.table(data);
+        start();
+    })
 };
 
 const viewEmp = () => {
     console.log("Let's look at the Employees");
+    connection.query("SELECT * FROM employee", (err,data) => {
+        if (err) throw err;
+        console.table(data);
+        start();
+    })
 };
 
 const updateRole = () => {
