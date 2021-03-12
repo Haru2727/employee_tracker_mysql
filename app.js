@@ -91,3 +91,31 @@ const start = () => {
             };
         });
 };
+
+const addDepartment = () => {
+    console.log("Adding Department");
+};
+
+const addRole = () => {
+    console.log("Adding a Role");
+};
+
+const addEmplyee = () => {
+    console.log("Adding Employee");
+};
+
+const viewDepot = () => {
+    console.log("Let's take a look at a Department");
+};
+
+const viewRole = () => {
+    console.log("Let's look at the Role we have");
+};
+
+const viewEmp = () => {
+    console.log("Let's look at the Employees");
+};
+
+const updateRole = () => {
+    console.log("Time to update the files here");
+};
