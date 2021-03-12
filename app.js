@@ -4,7 +4,7 @@ const mysql = require('mysql');
 const consoleTable = require('console.table');
 
 // Create the connection info for the sql database
-const connection =mysql.createConnection({
+const connection = mysql.createConnection({
     host: 'localhost',
     port: '3306',
     user: 'root',
@@ -15,11 +15,18 @@ const connection =mysql.createConnection({
 // Connecting to the mysql server and database 
 connection.connect((err) => {
     if (err) throw err;
+    // console.log("we've made contact!");
     start();
 });
 
-// Banner for the app
-console.log(`╔═════════════════════════════════════════════════════╗
+
+
+
+const start = () => {
+
+
+    // Banner for the app
+    console.log(`╔═════════════════════════════════════════════════════╗
 ║                                                     ║
 ║     _____                 _                         ║
 ║    | ____|_ __ ___  _ __ | | ___  _   _  ___  ___   ║
@@ -37,3 +44,50 @@ console.log(`╔═════════════════════�
 ║                                                     ║
 \╚═════════════════════════════════════════════════════╝
 `);
+
+    inquirer
+        .prompt({
+            type: "list",
+            name: "options",
+            message: "What would you like to do?",
+            choices: [
+                "Add Department",
+                "Add Role",
+                "Add Employee",
+                "View Department",
+                "View Role",
+                "View Employee",
+                "Update Employee Role",
+                "Exit"
+            ]
+        })
+        .then((answer) => {
+            console.log(`You've chosen: ${answer.options}`);
+            switch (answer.options) {
+                case "Add Department":
+                    addDepartment();
+                    break;
+                case "Add Role":
+                    addRole();
+                    break;
+                case "Add Employee":
+                    addEmplyee();
+                    break;
+                case "View Department":
+                    viewDepot();
+                    break;
+                case "View Role":
+                    viewRole();
+                    break;
+                case "View Employee":
+                    viewEmp();
+                    break;
+                case "Update Employee Role":
+                    updateRole();
+                    break;
+                case "Exit":
+                    connection.end();
+                    break;
+            };
+        });
+};
