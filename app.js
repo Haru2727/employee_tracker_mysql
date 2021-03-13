@@ -20,8 +20,8 @@ connection.connect((err) => {
 });
 
 
-    // Banner for the app
-    console.log(`╔═════════════════════════════════════════════════════╗
+// Banner for the app
+console.log(`╔═════════════════════════════════════════════════════╗
 ║                                                     ║
 ║     _____                 _                         ║
 ║    | ____|_ __ ___  _ __ | | ___  _   _  ___  ___   ║
@@ -209,7 +209,7 @@ const addEmplyee = () => {
 
 const viewDepot = () => {
     console.log("Let's take a look at a Department");
-    connection.query("SELECT * FROM department", (err,data) => {
+    connection.query("SELECT * FROM department", (err, data) => {
         if (err) throw err;
         console.table(data);
         start();
@@ -218,7 +218,7 @@ const viewDepot = () => {
 
 const viewRole = () => {
     console.log("Let's look at the Role we have");
-    connection.query("SELECT * FROM role", (err,data) => {
+    connection.query("SELECT * FROM role", (err, data) => {
         if (err) throw err;
         console.table(data);
         start();
@@ -227,13 +227,112 @@ const viewRole = () => {
 
 const viewEmp = () => {
     console.log("Let's look at the Employees");
-    connection.query("SELECT * FROM employee", (err,data) => {
+    connection.query("SELECT * FROM employee", (err, data) => {
         if (err) throw err;
         console.table(data);
         start();
     })
 };
 
-const updateRole = () => {
-    console.log("Time to update the files here");
-};
+function askId() {
+    return ([
+        {
+            name: "name",
+            type: "input",
+            message: "What is the employe ID?:  "
+        }
+    ]);
+}
+
+async function updateRole() {
+    const employeeId = await inquirer.prompt(askId());
+
+    connection.query('SELECT role.id, role.title FROM role ORDER BY role.id;', async (err, res) => {
+        if (err) throw err;
+        const { role } = await inquirer.prompt([
+            {
+                name: 'role',
+                type: 'list',
+                choices: () => res.map(res => res.title),
+                message: 'What is the new employee role?: '
+            }
+        ]);
+        let roleId;
+        for (const row of res) {
+            if (row.title === role) {
+                roleId = row.id;
+                continue;
+            }
+        }
+        connection.query(`UPDATE employee 
+        SET role_id = ${roleId}
+        WHERE employee.id = ${employeeId.name}`, async (err, res) => {
+            if (err) throw err;
+            console.log('Role has been updated..')
+            viewEmp();
+        });
+    });
+}
+
+
+
+// const updateRole = () => {
+//     console.log("Time to update the files here");
+//     connection.query("SELECT * FROM employee", (err, data) => {
+//         if (err) throw err;
+//         inquirer
+//             .prompt([
+//                 {
+//                     name: "employeeName",
+//                     type: "list",
+//                     message: "Which employee's role is changing?",
+//                     choices: function () {
+//                         employeeArray = [];
+//                         data.forEach(data => {
+//                             employeeArray.push(
+//                                 data.last_name
+//                             );
+//                         })
+//                         return employeeArray;
+//                     }
+//                 }
+//         ])
+//         .then((answer) => {
+//             const chosenName = answer.employeeName;
+//             connection.query("SELECT * FROM role", (err, res) => {
+//                 if (err) throw err;
+//                 inquirer
+//                 .prompt ([
+//                     {
+//                         name: "role",
+//                         type: "list",
+//                         message: "What is their new role?",
+//                         choices: function() {
+//                             rolesArray = [];
+//                             res.forEach(res => {
+//                                 rolesArray.push(
+//                                     res.title
+//                                 );
+//                             })
+//                             return rolesArray;
+//                         }
+//                     }
+//                 ])
+//                 .then((rolesAns) => {
+//                     const newRole = rolesAns.role;
+//                     connection.query("SELECT * FROM role WHERE title = ?",[newRole],(err, data) => {
+//                         if (err) throw err;
+//                         let roleID = res.id;
+//                         let query = "UPDATE employee SET role_id ? WHERE last_name ?";
+//                         let values = [roleID, chosenName]
+//                         connection.query(query, values, 
+//                             function(err, res, fields) {
+
+//                             })
+//                             viewEmp();
+//                     })
+//                 })
+//             })
+//         })
+//     });
+// };
