@@ -40,11 +40,9 @@ console.log(`╔═════════════════════�
 \╚═════════════════════════════════════════════════════╝
 `);
 
-
+// start function to kick things off
 const start = () => {
-
-
-
+// asking user what they need to do then using a switch case to have choices take in code
     inquirer
         .prompt({
             type: "list",
@@ -91,7 +89,7 @@ const start = () => {
             };
         });
 };
-
+// Creates and adds a new department to the DB 
 const addDepartment = () => {
 
     inquirer
@@ -116,7 +114,7 @@ const addDepartment = () => {
             );
         });
 };
-
+// Creates and adds a new role to the DB
 const addRole = () => {
 
     inquirer
@@ -157,7 +155,7 @@ const addRole = () => {
             );
         });
 };
-
+// Creates and adds a new Employee to the DB
 const addEmplyee = () => {
     inquirer
         .prompt([
@@ -207,6 +205,9 @@ const addEmplyee = () => {
 
 };
 
+
+// The next set will allow the user to view the content of the selected tables.
+
 const viewDepot = () => {
     console.log("Let's take a look at a Department");
     connection.query("SELECT * FROM department", (err, data) => {
@@ -233,6 +234,10 @@ const viewEmp = () => {
         start();
     })
 };
+
+
+// I had to use some google-fu to find a solution to this.  My previous attempt is commented out below.
+// This allows the user to update the employee's role.  It will switch the role_id accordingly.
 
 function askId() {
     return ([
